@@ -27,7 +27,7 @@ class Line2d < Quad
 end
 
 # Draws a point in 2d space at the point (x,y)
-class Point2d < Quad
+class Dot2d < Quad
 	def initialize(x:,y:,size:1,color:'white')
 		super(
 		x1:x,y1:y,
