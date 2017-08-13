@@ -31,7 +31,8 @@ def project(r:0, t:0, points:, degrees:true)
 	end
 
 	tMat = Matrix[[Math.cos(r), Math.sin(r), 0],
-		[Math.cos(r - Math::PI/2)*Math.sin(t), Math.sin(r - Math::PI/2)*Math.sin(t), -Math.cos(t)]]
+		[Math.cos(r - Math::PI/2)*Math.sin(t), 
+			Math.sin(r - Math::PI/2)*Math.sin(t), -Math.cos(t)]]
 
 	return tMat * points
 end
@@ -40,7 +41,7 @@ end
 	Draws a series of lines based off the coordinate Matrix of 'points'. 
 	If there are 
 =end
-def draw2d(points:,color:'white')
+def draw2d(points:,color:'white',space:)
 	if (points.class == Matrix || points.class = Vector) && 
 		((points.class == Matrix && points.row_size == 2 && points.column_size > 0) || 
 		(points.class == Vector && points.size == 2))  then
@@ -52,8 +53,8 @@ def draw2d(points:,color:'white')
 		if col_size > 2 then
 			while (col + 1) < col_size do
 				Line2d.new(
-					x1:points[0,col],y1:points[1,col],
-					x2:points[0,col+1],y2:points[1,col+1],
+					x1:points[0,col]+space.x,y1:points[1,col]+space.y,
+					x2:points[0,col+1]+space.x,y2:points[1,col+1]+space.y,
 					color:color)
 				col += 1
 			end
