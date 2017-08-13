@@ -2,19 +2,18 @@ require 'ruby2d'
 
 # Draws a line in 2D space from the vertex (x1,y2) to the vertex (x2,y2)
 class Line2d < Quad
-	def initialize(x1:,y1:,x2:,y2:,color:'white')	
-		@width = 1
+	def initialize(x1:,y1:,x2:,y2:,width:1,color:'white')
 		x3 = x2
 		y3 = y2
 		x4 = x1
 		y4 = y1
 
 		if (x1 - x2).abs < (y1 - y2).abs then
-			x3 += @width
-			x4 += @width
+			x3 += width
+			x4 += width
 		else
-			y3 += @width
-			y4 += @width
+			y3 += width
+			y4 += width
 		end
 
 		super(

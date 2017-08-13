@@ -15,7 +15,7 @@ update do
 
 	x2 = Math.sin((angle*Math::PI)/180)*length+500
 	y2 = Math.cos((angle*Math::PI)/180)*length+500
-	Point2d.new(x:x2,y:y2)
+	Dot2d.new(x:x2,y:y2)
 
 	STDOUT.write "Speed: #{speed} FPS: #{get :fps}\r"
 
