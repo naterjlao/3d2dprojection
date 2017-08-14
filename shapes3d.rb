@@ -75,6 +75,7 @@ class Cube3d
 end
 
 #Test
+=begin
 set width: 800
 set height: 800
 
@@ -102,4 +103,4 @@ end
 show
 
 
-
+=end
