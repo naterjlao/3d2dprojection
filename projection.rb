@@ -30,12 +30,28 @@ def project(r:0, t:0, points:, degrees:true)
 		t = degToRads(t)
 	end
 
-	tMat = Matrix[[Math.cos(r), Math.sin(r), 0],
-		[Math.cos(r - Math::PI/2)*Math.sin(t), 
-			Math.sin(r - Math::PI/2)*Math.sin(t), -Math.cos(t)]]
+	# Transformation Matrix
+	transform = Matrix[
+		[Math.cos(r), Math.sin(r), 0],
+		[-Math.cos(r+Math::PI/2)*Math.sin(t), -Math.sin(r+Math::PI/2)*Math.sin(t), -Math.cos(t)]
+	]
 
-	return tMat * points
+	return transform * points
 end
+
+=begin
+def applyTilt(t:, points:, degrees:true)
+	if degrees then t = degToRads(t) end
+
+	transform = Matrix[
+		[1, 0, 0],
+		[0, Math.cos(t), -Math.sin(t)],
+		[0, Math.sin(t), Math.cos(t)]
+	]
+
+	return transform * points
+end
+=end
 
 =begin
 	Draws a series of lines based off the coordinate Matrix of 'points'. 
