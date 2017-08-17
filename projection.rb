@@ -16,7 +16,7 @@ require_relative '../math_util/trig.rb'
 	represents the tilt of the 3D objects away from the z axis. It is assumed 
 	that 'r' and 't' are in degrees unless 'degrees' are set to false.
 =end
-def project(r:0, t:0, points:, degrees:true)
+def project(points:,space:)
 	# Check if points is a matrix or a vector that has a row dimension of 3
 	if (points.class != Matrix && points.class != Vector) || 
 		(points.class == Matrix && points.row_size != 3) ||
@@ -25,9 +25,12 @@ def project(r:0, t:0, points:, degrees:true)
 	end
 
 	# Covert the r and t values into radians
-	if degrees then 
-		r = degToRads(r)
-		t = degToRads(t)
+	if space.degrees then 
+		r = degToRads(space.r)
+		t = degToRads(space.t)
+	else
+		r = space.r
+		t = space.t
 	end
 
 	# Transformation Matrix
@@ -38,20 +41,6 @@ def project(r:0, t:0, points:, degrees:true)
 
 	return transform * points
 end
-
-=begin
-def applyTilt(t:, points:, degrees:true)
-	if degrees then t = degToRads(t) end
-
-	transform = Matrix[
-		[1, 0, 0],
-		[0, Math.cos(t), -Math.sin(t)],
-		[0, Math.sin(t), Math.cos(t)]
-	]
-
-	return transform * points
-end
-=end
 
 =begin
 	Draws a series of lines based off the coordinate Matrix of 'points'. 
@@ -66,7 +55,7 @@ def draw2d(points:,color:'white',space:)
 		col = 0
 		
 		# Connect the dots
-		if col_size > 2 then
+		if col_size > 1 then
 			while (col + 1) < col_size do
 				Line2d.new(
 					x1:points[0,col]+space.x,y1:points[1,col]+space.y,
@@ -81,4 +70,7 @@ def draw2d(points:,color:'white',space:)
 	end
 end
 
-
+def draw3d(points:,color:'white',space:)
+	projection = project(points:points,space:space)
+	draw2d(points:projection,color:color,space:space)
+end

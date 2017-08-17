@@ -21,58 +21,19 @@ class Space3d
 end
 
 =begin
-=begin
-	Represents the 3 dimensional rotation of an object in 3D space.
-	'x_rot' represents the rotation of an object over the x axis.
-	'x_rot' represents the rotation of an object over the x axis.
-	'x_rot' represents the rotation of an object over the x axis.
-	The boolean 'degrees' determines if the 
- =end
-class Orientation3d
-	attr_accessor :x_rot
-	attr_accessor :y_rot
-	attr_accessor :z_rot
-	attr_accessor :degrees
-
-	def initialize(x_rot:0,y_rot:0,z_rot:0,degrees:true)
-		@x_rot = x_rot
-		@y_rot = y_rot
-		@z_rot = z_rot
-		@degrees = degrees
-	end
-end
+	Superclass of any shape generated in 3D space. Holds values for the
+	'x','y','z' position, the local 'x_rot','y_rot','z_rot' rotation, If
+	the angle are degrees ('degrees'), the 'size' of the shape, the 'color'
+	and the 'space' at which the shape occupies.
 =end
-
-=begin
-	Generates a 3D axis centered at the origin of the 3D vector space.
-	Red represents the x axis, Green represents the y axis and Blue represents
-	the z axis. 
-=end
-class Axis3d
-	def initialize(
-		x_axis:Vector[1,0,0],y_axis:Vector[0,1,0],z_axis:Vector[0,0,1],
-		length:50,width:1,space:)
-
-		colors = ['red','green','blue']
-		axis3d = Matrix.columns([x_axis.to_a,y_axis.to_a,z_axis.to_a])
-		axis2d = length * project(r:space.r,t:space.t,
-			points:axis3d,degrees:space.degrees)
-
-		for i in 0..2 do
-			Line2d.new(
-				x1:space.x,y1:space.y,
-				x2:(axis2d.column(i))[0] + space.x,
-				y2:(axis2d.column(i))[1] + space.y,
-				width:width,color:colors[i])
-		end
-	end
-end
-
 class Shape3d
-	attr_accessor :x,:y,:z,:x_rot,:y_rot,:z_rot,:degrees,:size,:color,:space
-	@points = nil
+	attr_accessor :x,:y,:z,:x_rot,:y_rot,:z_rot,:degrees
+	attr_accessor :size,:color,:space
+	@points # 3 Dimensional matrix representing the vectors that makeup the shape
+	@origin # The centerpoint of rotation for the object: contains the origin vector, the x vector, the y vector and the z vector
 
-	def initialize(x:,y:,z:,x_rot:,y_rot:,z_rot:,degrees:,size:,color:,space:)
+	def initialize(x:0,y:0,z:0,x_rot:0,y_rot:0,z_rot:0,degrees:true,
+		size:100,color:'white',space:)
 		@x = x
 		@y = y
 		@z = z
@@ -86,8 +47,7 @@ class Shape3d
 	end
 
 	def draw()
-		projection = project(r:@space.r,t:@space.t,points:@points,degrees:@space.degrees)
-		draw2d(points:projection,color:@color,space:@space)
+		draw3d(points:@points,color:@color,space:@space)
 	end
 
 	def move(x:0,y:0,z:0)
@@ -184,6 +144,32 @@ class Shape3d
 	end
 
 	def rotateGlobalZ(z_rotg:0,degrees:true)
+	end
+end
+
+=begin
+	Generates a 3D axis centered at the origin of the 3D vector space.
+	Red represents the x axis, Green represents the y axis and Blue represents
+	the z axis. 
+=end
+class Axis3d < Shape3d
+	def initialize(
+		origin:Vector[0,0,0],x_axis:Vector[1,0,0],y_axis:Vector[0,1,0],z_axis:Vector[0,0,1],
+		size:50,space:)
+
+		super(size:50,space:space)
+		@colors = ['red','green','blue']
+		@points = Matrix.columns(
+			[(origin*size).to_a,(x_axis*size).to_a,(y_axis*size).to_a,(z_axis*size).to_a])
+	end
+
+	def draw()
+		projection = project(points:@points,space:@space)
+		for i in 1..3 do
+			draw2d(
+				points:Matrix.columns([projection.column(0),projection.column(i)]),
+				space:@space,color:@colors[i-1])
+		end
 	end
 end
 
