@@ -3,34 +3,20 @@ require 'ruby2d'
 require_relative 'projection.rb'
 
 =begin
-	Represents the visual perspective of 3D space. The angle 'r' represents the orbital 
-	rotation of the axis and 't' represents the tilt away from the z axis. The 'degrees'
-	boolean represents if the value of the 'r' and 't' are in degrees. 'x' and 'y' are
-	positional displacement of the 2 dimensional projection.
-=end
-class Space3d
-	attr_accessor :r,:t,:degrees,:x,:y
-
-	def initialize(r:0,t:0,degrees:true,x:320,y:240)
-		@r = r
-		@t = t
-		@degrees = degrees
-		@x = x
-		@y = y
-	end
-end
-
-=begin
 	Superclass of any shape generated in 3D space. Holds values for the
 	'x','y','z' position, the local 'x_rot','y_rot','z_rot' rotation, If
 	the angle are degrees ('degrees'), the 'size' of the shape, the 'color'
 	and the 'space' at which the shape occupies.
 =end
 class Shape3d
-	attr_accessor :x,:y,:z,:size,:color,:space
-	attr_reader :x_rot,:y_rot,:z_rot # Tracks the degrees of local rotations
+	attr_reader :x,:y,:z # Tracks movement in the xyz direction
+	attr_reader :x_rot,:y_rot,:z_rot # Tracks the degrees of local rotations (in degrees)
+	attr_accessor :size  # Size of the object
+	attr_accessor :color # Color of the object
+	attr_accessor :space # Space3d object that represents the space that the object occupies
 	@points # 3 Dimensional matrix representing the vectors that makeup the shape
-	@origin # The centerpoint of rotation for the object: contains the origin vector, the x vector, the y vector and the z vector
+	@origin # A matrix representing the origin of the object:
+			# 0 - the origin, 1 - the x vector, 2 - the y vector, 3 - z vector
 
 	def initialize(x:0,y:0,z:0,size:100,color:'white',space:)
 		@x = x
@@ -43,7 +29,7 @@ class Shape3d
 	end
 
 	def draw()
-		draw3d(points:@points,color:@color,space:@space)
+		@space.draw3d(points:@points,color:@color)
 	end
 
 	def move(x:0,y:0,z:0)
@@ -52,7 +38,7 @@ class Shape3d
 		moveZ(z:z)
 	end
 
-	def moveX(x:@x)
+	def moveX(x:0)
 		transformation = Matrix.build(3,@points.column_size) do |row,col| 
 			if row == 0 then x else 0 end 
 		end
@@ -60,7 +46,7 @@ class Shape3d
 		@points = transformation + @points
 	end
 
-	def moveY(y:@y)
+	def moveY(y:0)
 		transformation = Matrix.build(3,@points.column_size) do |row,col|
 			if row == 1 then y else 0 end
 		end
@@ -68,7 +54,7 @@ class Shape3d
 		@points = transformation + @points
 	end
 
-	def moveZ(z:@z)
+	def moveZ(z:0)
 		transformation = Matrix.build(3,@points.column_size) do |row,col|
 			if row == 2 then z else 0 end
 		end
@@ -160,11 +146,11 @@ class Axis3d < Shape3d
 	end
 
 	def draw()
-		projection = project(points:@points,space:@space)
+		projection = @space.project(points:@points)
 		for i in 1..3 do
-			draw2d(
+			@space.draw2d(
 				points:Matrix.columns([projection.column(0),projection.column(i)]),
-				space:@space,color:@colors[i-1])
+				color:@colors[i-1])
 		end
 	end
 end
