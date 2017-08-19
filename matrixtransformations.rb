@@ -83,6 +83,28 @@ module RotationMatrix
 end
 
 
+module MovementMatrix
+	def MovementMatrix.moveX2d(disp,num_cols)
+
+	end
+
+	def MovementMatrix.moveY2d(disp,num_cols)
+
+	end
+
+	def MovementMatrix.moveX3d(disp,num_cols)
+
+	end
+
+	def MovementMatrix.moveY3d(disp,num_cols)
+
+	end
+
+	def MovementMatrix.moveZ3d(disp,num_cols)
+		
+	end
+end
+
 
 
 

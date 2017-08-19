@@ -65,7 +65,7 @@ class Space3d
 	# Draws a series of lines based off the coordinate Matrix or Vector of 'points'. 
 	# If there are only one point in the Matrix, a dot is drawn at that singular point.
 	# Note that the origin is centered on the display screen, this is based
-	def draw2d(points:,color:'white',size:1)
+	def draw2d(points:,color:'white',width:1)
 		if (points.class == Matrix && points.row_size == 2 && points.column_size > 0) || 
 			(points.class == Vector && points.size == 2) then
 			col_size = 1
@@ -82,7 +82,7 @@ class Space3d
 						y1:@y_disp - points[1,col],
 						x2:@x_disp + points[0,col + 1],
 						y2:@y_disp - points[1,col + 1],
-						color:color,width:size)
+						color:color,width:width)
 					col += 1
 				end
 			else # Else, draw a dot
@@ -95,14 +95,14 @@ class Space3d
 					x += points[0] 
 					y -= points[1] 
 				end
-				Dot2d.new(x:x,y:y,color:color,size:size)
+				Dot2d.new(x:x,y:y,color:color,size:width)
 			end
 		end
 	end
 
-	def draw3d(points:,color:'white')
+	def draw3d(points:,color:'white',width:1)
 		projection = project(points:points)
-		draw2d(points:projection,color:color)
+		draw2d(points:projection,color:color,width:width)
 	end
 end
 

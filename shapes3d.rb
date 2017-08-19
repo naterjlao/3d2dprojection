@@ -1,6 +1,7 @@
 require 'matrix'
 require 'ruby2d'
 require_relative 'projection.rb'
+require_relative 'matrixtransformations.rb'
 
 =begin
 	Superclass of any shape generated in 3D space. Holds values for the
@@ -12,24 +13,26 @@ class Shape3d
 	attr_reader :x,:y,:z # Tracks movement in the xyz direction
 	attr_reader :x_rot,:y_rot,:z_rot # Tracks the degrees of local rotations (in degrees)
 	attr_accessor :size  # Size of the object
+	attr_accessor :width # Width of the lines that form the wireframe of the object
 	attr_accessor :color # Color of the object
 	attr_accessor :space # Space3d object that represents the space that the object occupies
 	@points # 3 Dimensional matrix representing the vectors that makeup the shape
 	@origin # A matrix representing the origin of the object:
-			# 0 - the origin, 1 - the x vector, 2 - the y vector, 3 - z vector
+			# 0 - the x vector, 1 - the y vector, 2 - z vector
 
-	def initialize(x:0,y:0,z:0,size:100,color:'white',space:)
+	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:)
 		@x = x
 		@y = y
 		@z = z
 		@size = size
 		@color = color
+		@width = width
 		@space = space
 		@x_rot = @y_rot = @z_rot = 0
 	end
 
 	def draw()
-		@space.draw3d(points:@points,color:@color)
+		@space.draw3d(points:@points,color:@color,width:@width)
 	end
 
 	def move(x:0,y:0,z:0)
@@ -76,13 +79,9 @@ class Shape3d
 			@x_rot += radsToDeg(x_rot) 
 		end
 
-		transformation = Matrix[
-			[1, 0, 0],
-			[0, Math.cos(x_rot), -Math.sin(x_rot)],
-			[0, Math.sin(x_rot), Math.cos(x_rot)]
-		]
+		@x_rot = @x_rot % 360
 
-		@points = transformation * @points
+		@points = RotationMatrix.rotateX3d(x_rot) * @points
 	end
 
 	def rotateY(y_rot:0,degrees:true)
@@ -93,13 +92,9 @@ class Shape3d
 			@y_rot += radsToDeg(y_rot)
 		end
 
-		transformation = Matrix[
-			[Math.cos(y_rot), 0, Math.sin(y_rot)],
-			[0, 1, 0],
-			[-Math.sin(y_rot), 0, Math.cos(y_rot)]
-		]
+		@y_rot = @y_rot % 360
 
-		@points = transformation * @points
+		@points = RotationMatrix.rotateY3d(y_rot) * @points
 	end
 
 	def rotateZ(z_rot:0,degrees:true)
@@ -110,13 +105,9 @@ class Shape3d
 			@z_rot += radsToDeg(z_rot)
 		end
 
-		transformation = Matrix[
-			[Math.cos(z_rot), -Math.sin(z_rot), 0],
-			[Math.sin(z_rot), Math.cos(z_rot), 0],
-			[0, 0, 1]
-		]
+		@z_rot = @z_rot % 360
 
-		@points = transformation * @points
+		@points = RotationMatrix.rotateZ3d(z_rot) * @points
 	end
 
 	def rotateGlobalX(x_rotg:0,degrees:true)
@@ -164,7 +155,7 @@ end
 class Cube3d < Shape3d
 	def initialize(
 		x:0,y:0,z:0,
-		size:100,color:'white',space:)
+		size:100,width:1,color:'white',space:)
 		super
 
 		# Cube construction
