@@ -27,23 +27,19 @@ end
 	and the 'space' at which the shape occupies.
 =end
 class Shape3d
-	attr_accessor :x,:y,:z,:x_rot,:y_rot,:z_rot,:degrees
-	attr_accessor :size,:color,:space
+	attr_accessor :x,:y,:z,:size,:color,:space
+	attr_reader :x_rot,:y_rot,:z_rot # Tracks the degrees of local rotations
 	@points # 3 Dimensional matrix representing the vectors that makeup the shape
 	@origin # The centerpoint of rotation for the object: contains the origin vector, the x vector, the y vector and the z vector
 
-	def initialize(x:0,y:0,z:0,x_rot:0,y_rot:0,z_rot:0,degrees:true,
-		size:100,color:'white',space:)
+	def initialize(x:0,y:0,z:0,size:100,color:'white',space:)
 		@x = x
 		@y = y
 		@z = z
-		@x_rot = x_rot
-		@y_rot = y_rot
-		@z_rot = z_rot
-		@degrees = degrees
 		@size = size
 		@color = color
 		@space = space
+		@x_rot = @y_rot = @z_rot = 0
 	end
 
 	def draw()
@@ -182,7 +178,6 @@ end
 class Cube3d < Shape3d
 	def initialize(
 		x:0,y:0,z:0,
-		x_rot:0,y_rot:0,z_rot:0,degrees:true,
 		size:100,color:'white',space:)
 		super
 

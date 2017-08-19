@@ -11,7 +11,6 @@ update do
 	clear
 	cube.draw()
 	axis.draw()
-	axisoffset.draw()
 	cube.rotate(x_rot:1,y_rot:0,z_rot:1)
 	draw3d(points:Matrix.columns([[0,0,0],[100,100,100]]),space:space)
 	space.r += 1
