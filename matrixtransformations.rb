@@ -12,7 +12,8 @@ require 'matrix'
 
 =begin
 	Contains methods that return a projection matrix from a higher dimension
-	matrix to a lower dimensional matrix.
+	matrix to a lower dimensional matrix. These matrices should mulitplied to
+	the left of a given input matrix.
 =end
 module ProjectionMatrix
 
@@ -42,7 +43,8 @@ end
 =begin
 	Contains methods that return a rotational matrix based on the given angle of
 	rotation. Note that all angles given must be in radian form. The rotation is
-	based off of the right hand rule.
+	based off of the right hand rule. These matrices should mulitplied to
+	the left of a given input matrix.
 =end
 module RotationMatrix
 
@@ -82,26 +84,31 @@ module RotationMatrix
 	end
 end
 
-
+=begin
+	Contains methods that return a rotational matrix based on the given angle of
+	rotation. Note that all angles given must be in radian form. The rotation is
+	based off of the right hand rule. These matrices should added to the left of 
+	a given input matrix.
+=end
 module MovementMatrix
-	def MovementMatrix.moveX2d(disp,num_cols)
-
+	def MovementMatrix.moveX2d(disp,column_size)
+		return Matrix.build(2,column_size) {|row,col| if row == 0 then disp else 0 end}
 	end
 
-	def MovementMatrix.moveY2d(disp,num_cols)
-
+	def MovementMatrix.moveY2d(disp,column_size)
+		return Matrix.build(2,column_size) {|row,col| if row == 1 then disp else 0 end}
 	end
 
-	def MovementMatrix.moveX3d(disp,num_cols)
-
+	def MovementMatrix.moveX3d(disp,column_size)
+		return Matrix.build(3,column_size) {|row,col| if row == 0 then disp else 0 end}
 	end
 
-	def MovementMatrix.moveY3d(disp,num_cols)
-
+	def MovementMatrix.moveY3d(disp,column_size)
+		return Matrix.build(3,column_size) {|row,col| if row == 1 then disp else 0 end}
 	end
 
-	def MovementMatrix.moveZ3d(disp,num_cols)
-		
+	def MovementMatrix.moveZ3d(disp,column_size)
+		return Matrix.build(3,column_size) {|row,col| if row == 2 then disp else 0 end}
 	end
 end
 
