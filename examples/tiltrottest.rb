@@ -10,15 +10,16 @@ axis = Axis3d.new(space:space)
 axisoffset = Axis3d.new(origin:Vector[1,1,1],space:space)
 
 tick = 0
-speed = 0
+speed = 5
 acc = true
 update do
 	clear
 	cube.draw()
 	axis.draw()
 	cube.rotate(x_rot:0,y_rot:0,z_rot:speed)
-	space.r += 1
-
+	cube.move(x:1)
+	#space.r += 1
+=begin
 	if tick % 60 == 0 then
 		if acc then
 			speed += 1
@@ -28,6 +29,7 @@ update do
 		acc = true if speed < -5
 		acc = false if speed > 5
 	end
+=end
 
 	tick += 1
 
