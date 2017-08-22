@@ -39,6 +39,34 @@ class Cube3d < Shape3d
 	end
 end
 
+class Circle3d < Shape3d
+	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
+		super(x:x,y:y,z:z,size:size,width:width,color:color,space:space)
+
+		radius = size/2.0
+		step = 2 * Math::PI / resolution
+		i = 0
+		circumference = []
+
+		while i < resolution do
+			circumference << [size*Math.cos(i * step)/2.0 + x, size*Math.sin(i * step)/2.0 + y, z]
+			i += 1
+		end
+
+		circumference << circumference[0]
+
+		@points = Matrix.columns(circumference)
+	end
+end
+
+class Sphere3d
+	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:)
+		super
+
+
+	end
+end
+
 =begin
 	Generates a pyramid in 3D space where 'x','y','z' denotes the position
 	of the pyramid (the middle of the base). 'height' determines the height

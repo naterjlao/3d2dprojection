@@ -1,18 +1,19 @@
 require_relative '../shapes3d.rb'
 
-set width: 1000
-set height: 1000
+
 
 TILT = 40
 NUM_CUBES = 15
-SIZE_FACTOR = 2
-MAX_SIZE = 300 * SIZE_FACTOR
-MIN_SIZE = 10 * SIZE_FACTOR
+SCREEN_SIZE = 600
+MAX_SIZE = SCREEN_SIZE * 0.6
+MIN_SIZE = 10
 SIZE_INC = (MAX_SIZE - MIN_SIZE) / NUM_CUBES
 MIN_SPEED = -1
 SPEED_INC = 0.3
 COLORS = ['red','orange','yellow','green','blue','purple']
 
+set width: SCREEN_SIZE
+set height: SCREEN_SIZE
 set title: 'Hypercube'
 cubes = Array.new(NUM_CUBES) {Space3d.new(t:TILT,x_dim:(get :width),y_dim:(get :height))}
 

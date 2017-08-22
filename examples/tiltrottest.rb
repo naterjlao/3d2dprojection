@@ -32,7 +32,7 @@ update do
 
 	tick += 1
 
-	STDOUT.write "x_rot: #{cube.x_rot} y_rot: #{cube.y_rot} z_rot: #{cube.z_rot}\r"
+	STDOUT.write "x_rot: #{cube.x_rot}\ty_rot: #{cube.y_rot}\tz_rot: #{cube.z_rot}\r"
 end
 
 show
