@@ -1,5 +1,5 @@
 require 'ruby2d'
-require_relative 'shapes2d.rb'
+require_relative '../shapes2d.rb'
 
 #test
 set width: 1000
