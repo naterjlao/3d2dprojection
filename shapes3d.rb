@@ -42,29 +42,69 @@ end
 class Circle3d < Shape3d
 	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
 		super(x:x,y:y,z:z,size:size,width:width,color:color,space:space)
+		@resolution = resolutions
+		@radius = size/2.0
+		@points = Matrix.columns(generateCircumference(x,y,z,@radius,2*Math::PI/@resolution,@resolution))
+	end
 
-		radius = size/2.0
-		step = 2 * Math::PI / resolution
+	# Generate points around a circle as defined by the following parameters:
+	# 'x','y','z' defines the center of the circle. 'radius' defines the distance between the
+	# circle's center and edges. 'step' is the radian amount of change between the points of
+	# the circle. 'resolution' is the number of points the circle has. The higher the resolution,
+	# the more detailed the circle becomes. 
+	# Note that the method returns an array of array that represents the position in 3D space of 
+	# the points in the circle. Note that the array is closed meanining that the first element of
+	# the array is the same as the last element of the array.
+	def generateCircumference(x,y,z,radius,step,resolution)
 		i = 0
 		circumference = []
 
+		# Generate points 
 		while i < resolution do
-			circumference << [size*Math.cos(i * step)/2.0 + x, size*Math.sin(i * step)/2.0 + y, z]
+			circumference << [radius*Math.cos(i * step) + x, radius*Math.sin(i * step) + y, z]
 			i += 1
 		end
-
 		circumference << circumference[0]
 
-		@points = Matrix.columns(circumference)
+		return circumference
 	end
+
+	private :generateCircumference
 end
 
-class Sphere3d
-	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:)
+class Sphere3d < Circle3d
+	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
 		super
+
+		@northPole = Vector[x,y,z + radius]
+		@southPole = Vector[x,y,z - radius]
+		@latitudes = [@points]
+		#@longitudes
 
 
 	end
+
+	def draw()
+		@space.draw3d(points:@northPole,color:color,width:width)
+		@space.draw3d(points:@southPole,color:color,width:width)
+	end
+
+	def generateLatitudes()
+		steps = @radius * 2 / @resolutions
+		i = 1
+		lat = []
+		while i < @resolution do
+
+
+			i += 1
+		end
+	end
+
+	def generateLongitudes()
+
+	end
+
+	private :generateLatitudes, :generateLongitudes
 end
 
 =begin
