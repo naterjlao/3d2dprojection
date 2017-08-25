@@ -42,9 +42,9 @@ end
 class Circle3d < Shape3d
 	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
 		super(x:x,y:y,z:z,size:size,width:width,color:color,space:space)
-		@resolution = resolutions
+		@resolution = resolution
 		@radius = size/2.0
-		@points = Matrix.columns(generateCircumference(x,y,z,@radius,2*Math::PI/@resolution,@resolution))
+		@points = Matrix.columns(generateCircumference(x,y,z,@radius,@resolution))
 	end
 
 	# Generate points around a circle as defined by the following parameters:
@@ -55,9 +55,10 @@ class Circle3d < Shape3d
 	# Note that the method returns an array of array that represents the position in 3D space of 
 	# the points in the circle. Note that the array is closed meanining that the first element of
 	# the array is the same as the last element of the array.
-	def generateCircumference(x,y,z,radius,step,resolution)
+	def generateCircumference(x,y,z,radius,resolution)
 		i = 0
 		circumference = []
+		step = 2 * Math::PI / resolution
 
 		# Generate points 
 		while i < resolution do
@@ -76,32 +77,57 @@ class Sphere3d < Circle3d
 	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
 		super
 
-		@northPole = Vector[x,y,z + radius]
-		@southPole = Vector[x,y,z - radius]
-		@latitudes = [@points]
-		#@longitudes
-
+		@northPole = Vector[x,y,z + @radius]
+		@southPole = Vector[x,y,z - @radius]
+		@latitudes = []
+		@longitudes = [] 
+		generateLatitudes()
+		generateLongitudes()
 
 	end
 
 	def draw()
-		@space.draw3d(points:@northPole,color:color,width:width)
-		@space.draw3d(points:@southPole,color:color,width:width)
+		@space.draw3d(points:@northPole,color:@color,width:@width)
+		@space.draw3d(points:@southPole,color:@color,width:@width)
+		@latitudes.each do |l|
+			@space.draw3d(points:l,color:@color,width:@width)
+		end 
+		@longitudes.each do |l|
+			@space.draw3d(points:l,color:@color,width:@width)
+		end 
 	end
 
 	def generateLatitudes()
-		steps = @radius * 2 / @resolutions
+		step = @radius * 2 / @resolution
 		i = 1
+		z = @radius + @z
 		lat = []
 		while i < @resolution do
-
-
+			z -= step
+			radius = @radius * Math.cos(Math.asin(z/@radius))
+			@latitudes << Matrix.columns(generateCircumference(@x,@y,z,radius,@resolution))
 			i += 1
 		end
 	end
 
 	def generateLongitudes()
+		i = 0
+		while i < @resolution do
+			longitude = []
+			longitude << @northPole.to_a
+			
+			j = 1
+			while j < @resolution do
+				longitude << @latitudes[j - 1].column(i).to_a
+				j += 1
+			end
 
+			longitude << @southPole.to_a
+
+			@longitudes << Matrix.columns(longitude)
+
+			i += 1
+		end
 	end
 
 	private :generateLatitudes, :generateLongitudes
@@ -119,3 +145,12 @@ class Pyramid3d
 		super
 	end
 end
+
+
+
+
+
+
+
+
+
