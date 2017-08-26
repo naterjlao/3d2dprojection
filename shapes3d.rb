@@ -77,10 +77,12 @@ class Sphere3d < Circle3d
 	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
 		super
 
-		@northPole = Vector[x,y,z + @radius]
-		@southPole = Vector[x,y,z - @radius]
-		@latitudes = []
-		@longitudes = [] 
+		@northPole = Vector[x,y,z + @radius] 	# A vector representing the north pole point
+		@southPole = Vector[x,y,z - @radius] 	# A vector representing the south pole point
+		@latitudes = []							# Lines that encircle the sphere parallel to the equator
+		@longitudes = [] 						# Lines that encircle the sphere perpendicular to the equator
+		
+		# Generation functions
 		generateLatitudes()
 		generateLongitudes()
 
@@ -98,14 +100,16 @@ class Sphere3d < Circle3d
 	end
 
 	def generateLatitudes()
-		step = @radius * 2 / @resolution
-		i = 1
-		z = @radius + @z
+		step = @radius * 2 / @resolution	# Increments of distance from pole to pole
+		z = @radius							# Start from the north pole
 		lat = []
+
+		# Index starts at 1, the first latitude line (0 represents the north pole, @resolution represents the south pole)
+		i = 1
 		while i < @resolution do
 			z -= step
 			radius = @radius * Math.cos(Math.asin(z/@radius))
-			@latitudes << Matrix.columns(generateCircumference(@x,@y,z,radius,@resolution))
+			@latitudes << Matrix.columns(generateCircumference(@x,@y,z + @z,radius,@resolution))
 			i += 1
 		end
 	end

@@ -21,7 +21,7 @@ class Shape3d
 	attr_accessor :width # Width of the lines that form the wireframe of the object
 	attr_accessor :color # Color of the object
 	attr_accessor :space # Space3d object that represents the space that the object occupies
-	@points # 3 Dimensional matrix representing the vectors that makeup the shape
+	@points # 3 Dimensional matrices representing the vectors that makeup the shape
 	@basis # A matrix representing the stadard basis of the object:
 			# 0 - the x vector, 1 - the y vector, 2 - z vector
 
@@ -42,7 +42,7 @@ class Shape3d
 	end
 
 	def drawAxis()
-		Axis3d.new(origin:originVector(),axis:@basis,disp:displacementBasisMatrix(cols:4),space:@space).draw()
+		Axis3d.new(origin:originVector(),axis:@basis,disp:displacementBasisMatrix(4),space:@space).draw()
 	end
 
 	# Move Functions:
@@ -55,19 +55,19 @@ class Shape3d
 		moveZ(z:z)
 	end
 
-	def moveX(x:0)
+	def moveX(x = 0)
 		@x += x
 		@points = MovementMatrix.moveX3d(x,@points.column_size) + @points
 		@basis = MovementMatrix.moveX3d(x,@basis.column_size) + @basis
 	end
 
-	def moveY(y:0)
+	def moveY(y = 0)
 		@y += y
 		@points = MovementMatrix.moveY3d(y,@points.column_size) + @points
 		@basis = MovementMatrix.moveY3d(y,@basis.column_size) + @basis
 	end
 
-	def moveZ(z:0)
+	def moveZ(z = 0)
 		@z += z
 		@points = MovementMatrix.moveZ3d(z,@points.column_size) + @points
 		@basis = MovementMatrix.moveZ3d(z,@basis.column_size) + @basis
@@ -84,7 +84,7 @@ class Shape3d
 		rotateZ(z_rot:z_rot,degrees:degrees)
 	end
 
-	def rotateX(x_rot:0,degrees:true)
+	def rotateX(x_rot = 0, degrees = true)
 		# update local rotation value
 		if degrees then 
 			@x_rot += x_rot
@@ -103,7 +103,7 @@ class Shape3d
 		@basis = rotation * (@basis - dispAxis) + dispAxis
 	end
 
-	def rotateY(y_rot:0,degrees:true)
+	def rotateY(y_rot = 0, degrees = true)
 		if degrees then 
 			@y_rot += y_rot
 			y_rot = degToRads(y_rot) 
@@ -120,7 +120,7 @@ class Shape3d
 		@basis = rotation * (@basis - dispAxis) + dispAxis
 	end
 
-	def rotateZ(z_rot:0,degrees:true)
+	def rotateZ(z_rot = 0,degrees = true)
 		if degrees then 
 			@z_rot += z_rot
 			z_rot = degToRads(z_rot) 
@@ -141,13 +141,13 @@ class Shape3d
 	# Specifies rotation of the object based on the rotational axis of 3D space.
 	# Note that values are a displacement of the original orientation of the
 	# object.
-	def rotateGlobalX(x_rotg:0,degrees:true)
+	def rotateGlobalX(x_rotg = 0,degrees = true)
 	end
 
-	def rotateGlobalY(y_rotg:0,degrees:true)
+	def rotateGlobalY(y_rotg = 0,degrees = true)
 	end
 
-	def rotateGlobalZ(z_rotg:0,degrees:true)
+	def rotateGlobalZ(z_rotg = 0,degrees = true)
 	end
 
 
@@ -159,7 +159,7 @@ class Shape3d
 			MovementMatrix.moveZ3d(@z,@points.column_size)
 	end
 
-	def displacementBasisMatrix(cols:0)
+	def displacementBasisMatrix(cols = 0)
 		if cols < 1 then 
 			return MovementMatrix.moveX3d(@x,@basis.column_size) + 
 				MovementMatrix.moveY3d(@y,@basis.column_size) +
