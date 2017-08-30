@@ -56,21 +56,27 @@ class Shape3d
 	end
 
 	def moveX(x = 0)
-		@x += x
-		@points = MovementMatrix.moveX3d(x,@points.column_size) + @points
-		@basis = MovementMatrix.moveX3d(x,@basis.column_size) + @basis
+		if x != 0 then
+			@x += x
+			@points = MovementMatrix.moveX3d(x,@points.column_size) + @points
+			@basis = MovementMatrix.moveX3d(x,@basis.column_size) + @basis
+		end
 	end
 
 	def moveY(y = 0)
-		@y += y
-		@points = MovementMatrix.moveY3d(y,@points.column_size) + @points
-		@basis = MovementMatrix.moveY3d(y,@basis.column_size) + @basis
+		if x != 0 then
+			@y += y
+			@points = MovementMatrix.moveY3d(y,@points.column_size) + @points
+			@basis = MovementMatrix.moveY3d(y,@basis.column_size) + @basis
+		end
 	end
 
 	def moveZ(z = 0)
-		@z += z
-		@points = MovementMatrix.moveZ3d(z,@points.column_size) + @points
-		@basis = MovementMatrix.moveZ3d(z,@basis.column_size) + @basis
+		if x != 0 then
+			@z += z
+			@points = MovementMatrix.moveZ3d(z,@points.column_size) + @points
+			@basis = MovementMatrix.moveZ3d(z,@basis.column_size) + @basis
+		end
 	end
 
 	# Rotational Functions (Local):
@@ -174,6 +180,8 @@ class Shape3d
 	def originVector()
 		return Vector[@x,@y,@z]
 	end
+
+	private :displacementMatrix, :displacementBasisMatrix, :originVector
 end
 
 =begin

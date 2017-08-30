@@ -85,7 +85,6 @@ class Sphere3d < Circle3d
 		# Generation functions
 		generateLatitudes()
 		generateLongitudes()
-
 	end
 
 	def draw()
@@ -134,7 +133,11 @@ class Sphere3d < Circle3d
 		end
 	end
 
-	private :generateLatitudes, :generateLongitudes
+	def setPoints()
+		#insert the data from longitude and latititude into points to be used in the movement/rotation matrix algorithms
+	end
+
+	private :generateLatitudes, :generateLongitudes, :setPoints
 end
 
 =begin
