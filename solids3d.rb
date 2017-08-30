@@ -10,7 +10,7 @@ require_relative 'matrixtransformations.rb'
 	cube. 'color' denotes the color of the cube. 'space' is a Space3d
 	object which determines the perspective of the cube.
 =end
-class Cube3d < Shape3d
+class Cube3d < Solid3d
 	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:)
 		super
 
@@ -39,7 +39,7 @@ class Cube3d < Shape3d
 	end
 end
 
-class Circle3d < Shape3d
+class Circle3d < Solid3d
 	def initialize(x:0,y:0,z:0,size:100,width:1,color:'white',space:,resolution:8)
 		super(x:x,y:y,z:z,size:size,width:width,color:color,space:space)
 		@resolution = resolution

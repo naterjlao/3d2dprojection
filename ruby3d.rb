@@ -1,6 +1,6 @@
 =begin
-	A Ruby 3D visualizer based on the ruby2d API. Defined below is the superclass 'Shape3d'.
-	An object that is a 'Shape3d' is a 3 dimensional object that exists as a matrix of vectors.
+	A Ruby 3D visualizer based on the ruby2d API. Defined below is the superclass 'Solid3d'.
+	An object that is a 'Solid3d' is a 3 dimensional object that exists as a matrix of vectors.
 	Manipulation of an object is based on linear transformation via matrix multiplication,
 	subtraction and addition.
 =end
@@ -13,15 +13,19 @@ require_relative 'projection.rb'
 	'x','y','z' position, the local 'x_rot','y_rot','z_rot' rotation, If
 	the angle are degrees ('degrees'), the 'size' of the shape, the 'color'
 	and the 'space' at which the shape occupies.
+
+	The @points value of in the class holds the geometric coordinates of all edges of the
+	solid. The instance variable itself is an array containing a 3xn matrices. Each matrix
+	represents a line or point in space and n represents the number of veritices in each line
 =end
-class Shape3d
+class Solid3d
 	attr_reader :x,:y,:z # Tracks movement in the xyz direction
 	attr_reader :x_rot,:y_rot,:z_rot # Tracks the degrees of local rotations (in degrees)
 	attr_accessor :size  # Size of the object
 	attr_accessor :width # Width of the lines that form the wireframe of the object
 	attr_accessor :color # Color of the object
 	attr_accessor :space # Space3d object that represents the space that the object occupies
-	@points # 3 Dimensional matrices representing the vectors that makeup the shape
+	@points # An array of 3 Dimensional matrices representing the edge lines that makeup the shape
 	@basis # A matrix representing the stadard basis of the object:
 			# 0 - the x vector, 1 - the y vector, 2 - z vector
 
@@ -37,7 +41,8 @@ class Shape3d
 		@basis = Matrix.columns([[@x + 1, @y, @z], [@x, @y + 1,@z], [@x, @y, @z + 1]])
 	end
 
-	def draw()
+	def draw() 
+		# This needs to be revamped, @points should be an array of matrices, not a singular matrix
 		@space.draw3d(points:@points,color:@color,width:@width)
 	end
 
@@ -50,9 +55,9 @@ class Shape3d
 	# not absolute positions in space but rather a displacement of the current
 	# position of the object.
 	def move(x:0,y:0,z:0)
-		moveX(x:x)
-		moveY(y:y)
-		moveZ(z:z)
+		moveX(x)
+		moveY(y)
+		moveZ(z)
 	end
 
 	def moveX(x = 0)
@@ -85,9 +90,9 @@ class Shape3d
 	# position of the object. Local rotational movement is based on the local
 	# axis of the object
 	def rotate(x_rot:0,y_rot:0,z_rot:0,degrees:true)
-		rotateX(x_rot:x_rot,degrees:degrees)
-		rotateY(y_rot:y_rot,degrees:degrees)
-		rotateZ(z_rot:z_rot,degrees:degrees)
+		rotateX(x_rot,degrees)
+		rotateY(y_rot,degrees)
+		rotateZ(z_rot,degrees)
 	end
 
 	def rotateX(x_rot = 0, degrees = true)
@@ -189,7 +194,7 @@ end
 	Red represents the x axis, Green represents the y axis and Blue represents
 	the z axis. 
 =end
-class Axis3d < Shape3d
+class Axis3d < Solid3d
 	def initialize(
 		origin:Vector[0,0,0],
 		axis:Matrix.columns([[1,0,0],[0,1,0],[0,0,1]]),
@@ -211,4 +216,4 @@ class Axis3d < Shape3d
 	end
 end
 
-require_relative 'shapes3d.rb'
+require_relative 'solids3d.rb'

@@ -1,4 +1,4 @@
-require_relative '../shapes3d.rb'
+require_relative '../solids3d.rb'
 
 
 
