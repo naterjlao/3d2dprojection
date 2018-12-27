@@ -1,5 +1,5 @@
 require 'ruby2d'
-require_relative 'trig.rb'
+require_relative '/home/nlao/Projects/Programming/ruby/math_util/trig.rb'
 
 set fps: 60
 radius = 100
